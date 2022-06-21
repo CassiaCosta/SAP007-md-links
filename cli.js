@@ -1,23 +1,18 @@
-const pegaArquivo = require('./index');
-const caminho = process.argv;
+const getFile = require('./index');
+const validateURLs = require('./http-validation');
 
-function processaTexto(caminhoDeArquivo) {
-  const resultado = pegaArquivo(caminhoDeArquivo[2]);
-  console.log(resultado)
+const way = process.argv;
+
+function processText(filePath) {
+  getFile(filePath[2]).then((resp) => {
+    if (way[3] === 'validate') {
+      validateURLs(resp).then((res) => {
+        console.log('validated links', res)
+      })
+    } else {
+      console.log('links list', resp);
+    }
+  });
 }
 
-processaTexto(caminho);
-
-//DAY
-// const mdLinks = require('./index');
-// const path = process.argv[2];
-//console.log(mdLinks(path[2]));
-
-// mdLinks(path)
-//   .then((result) => {
-//     result.forEach(element => {
-//     });(element => {
-//       console.log(element.text, element.link, element.arquivo);
-//     });
-//   })
-//   .catch((error) => console.log(error));
+processText(way);

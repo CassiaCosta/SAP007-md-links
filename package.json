@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cli": "node cli.js .src/text1.md"
+    "cli": "node cli.js"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/CassiaCosta/SAP007-md-links/issues"
   },
-  "homepage": "https://github.com/CassiaCosta/SAP007-md-links#readme"
+  "homepage": "https://github.com/CassiaCosta/SAP007-md-links#readme",
+  "dependencies": {
+    "node-fetch": "^3.2.6"
+  }
 }

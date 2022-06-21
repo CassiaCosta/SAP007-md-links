@@ -1,52 +1,21 @@
-const fs = require("fs");
-// const path = require('path');
+const fs = require('fs');
 
-function extraiLinks(texto) {
+function extractLinks(text) {
   const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
-  const arrayResultados = [];
+  const resultsArray = [];
   let temp;
-  while((temp = regex.exec(texto)) !== null) {
-    arrayResultados.push({ [temp[1]]: temp[2]})
+  while((temp = regex.exec(text)) !== null) {
+    resultsArray.push({ [temp[1]]: temp[2] })
   }
-  return arrayResultados.length === 0 ? 'não há links' : arrayResultados;
+  return resultsArray.length === 0 ? 'não existe links' : resultsArray;
 }
 
-function trataErro(erro) {
-  throw new Error(erro.code, "não há arquivo no caminho!");
+function getFile(filePath) {
+  const encoding = 'utf-8';
+  return fs.promises
+  .readFile(filePath, encoding)
+  .then((resp) => extractLinks(resp))
+  .catch((err) => console.error(err))
 }
 
-function pegaArquivo(caminhoDoArquivo) {
-  const encoding = "utf-8";
-  fs.promises.readFile(caminhoDoArquivo, encoding)
-    .then((texto) => {
-      console.log(extraiLinks(texto))
-    })
-    .catch((erro) => trataErro(erro));
-}
-
-// const mdLinks = (arquivo) => {
-//   const regex = /\[([^\]]*)\]\(https?:\/\/[^$#\s].[^\s]*\)/gm;
-//   return new Promise((resolve, reject) => {
-//     fs.readFile(arquivo, 'utf8', (erro, texto) => {
-//       if (erro) {
-//        if(path.extname(arquivo) !== ".md")
-//        reject('Formato Inválido')
-//         reject(error(erro))
-//       } else {
-//         const linkExtraido = texto.match(regex)
-//         linkExtraido.map((link) => {
-//           const arrLink = link.replace('[', '').split('](');
-//           const strObject = {
-//             text: arrLink[0],
-//             link: arrLink[1],
-//             arquivo: arquivo,
-//           };
-//           return resolve(console.log(strObject))
-//         })
-//       }
-//     })
-//   })
-// }
-
-module.exports = pegaArquivo;
-// module.exports = mdLinks
+module.exports = getFile;
