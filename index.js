@@ -1,6 +1,5 @@
 const fs = require("fs");
-
-const texto = "## 1. Prefácio [Markdown](https://pt.wikipedia.org/wiki/Markdown) é uma linguagem de marcação muito popular entre os programadores. É usada em muitas plataformas que manipulam texto (GitHub, fórum, blogs e etc) e é muito comum encontrar arquivos com este formato em qualquer repositório (começando pelo tradicional `README.md`). Os arquivos `Markdown` normalmente contém _links_ que podem estar quebrados, ou que já não são válidos, prejudicando muito o valor da informação que está ali. Uma comunidade open source nos propôs criar uma ferramenta, usando [Node.js](https://nodejs.org/), que leia e analise arquivos no formato `Markdown`, para verificar os arquivos que contenham links e mostrar algumas estatísticas. ![md-links](https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg)";
+// const path = require('path');
 
 function extraiLinks(texto) {
   const regex = /\[([^\]]*)\]\((https?:\/\/[^$#\s].[^\s]*)\)/gm;
@@ -9,7 +8,7 @@ function extraiLinks(texto) {
   while((temp = regex.exec(texto)) !== null) {
     arrayResultados.push({ [temp[1]]: temp[2]})
   }
-  return arrayResultados;
+  return arrayResultados.length === 0 ? 'não há links' : arrayResultados;
 }
 
 function trataErro(erro) {
@@ -18,20 +17,36 @@ function trataErro(erro) {
 
 function pegaArquivo(caminhoDoArquivo) {
   const encoding = "utf-8";
-  fs.promises
-    .readFile(caminhoDoArquivo, encoding)
-    .then((texto) => console.log(extraiLinks(texto)))
+  fs.promises.readFile(caminhoDoArquivo, encoding)
+    .then((texto) => {
+      console.log(extraiLinks(texto))
+    })
     .catch((erro) => trataErro(erro));
 }
 
-// function pegaArquivo(caminhoDoArquivo) {
-//   const encoding = 'utf-8';
-//   fs.readFile(caminhoDoArquivo, encoding, (erro, texto) => {
-//     if(erro) {
-//       trataErro(erro);
-//     }
-//     console.log(texto)
+// const mdLinks = (arquivo) => {
+//   const regex = /\[([^\]]*)\]\(https?:\/\/[^$#\s].[^\s]*\)/gm;
+//   return new Promise((resolve, reject) => {
+//     fs.readFile(arquivo, 'utf8', (erro, texto) => {
+//       if (erro) {
+//        if(path.extname(arquivo) !== ".md")
+//        reject('Formato Inválido')
+//         reject(error(erro))
+//       } else {
+//         const linkExtraido = texto.match(regex)
+//         linkExtraido.map((link) => {
+//           const arrLink = link.replace('[', '').split('](');
+//           const strObject = {
+//             text: arrLink[0],
+//             link: arrLink[1],
+//             arquivo: arquivo,
+//           };
+//           return resolve(console.log(strObject))
+//         })
+//       }
+//     })
 //   })
 // }
 
-pegaArquivo("./src/text1.md");
+module.exports = pegaArquivo;
+// module.exports = mdLinks
